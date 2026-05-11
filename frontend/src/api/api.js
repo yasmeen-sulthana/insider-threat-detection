@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'https://insider-threat-detection-lbkc.onrender.com';
 
 export const uploadFiles = async (filesMap) => {
   const formData = new FormData();
