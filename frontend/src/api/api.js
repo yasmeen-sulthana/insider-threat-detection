@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'https://insider-threat-detection-lbkc.onrender.com';
+const API_BASE = 'https://unshaken-flatten-crabmeat.ngrok-free.dev';
 
 export const uploadFiles = async (filesMap) => {
   const formData = new FormData();
