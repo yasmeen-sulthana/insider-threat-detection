@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   PieChart,
   Pie,
@@ -26,6 +26,7 @@ const PAGE_SIZE = 10;
 export default function Results() {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [data, setData] = useState(null);
 
@@ -44,15 +45,20 @@ export default function Results() {
   // =====================================
   useEffect(() => {
 
-    const stored = sessionStorage.getItem('insiderResults');
-
-    if (stored) {
-
-      setData(JSON.parse(stored));
-
+    if (location.state && location.state.insiderResults) {
+      setData(location.state.insiderResults);
+    } else {
+      const stored = sessionStorage.getItem('insiderResults');
+      if (stored) {
+        try {
+          setData(JSON.parse(stored));
+        } catch (e) {
+          console.error('Failed to parse stored results', e);
+        }
+      }
     }
 
-  }, []);
+  }, [location.state]);
 
   // =====================================
   // PIE CHART DATA

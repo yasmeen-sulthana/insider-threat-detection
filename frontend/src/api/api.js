@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'https://unshaken-flatten-crabmeat.ngrok-free.dev';
+const API_BASE = 'http://127.0.0.1:8000';
 
 export const uploadFiles = async (filesMap) => {
   const formData = new FormData();

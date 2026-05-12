@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { runModel, getProgress } from '../api/api';
+import { uploadFiles, runModel, getProgress } from '../api/api';
 
 const FILE_SLOTS = [
   { key: 'device', label: 'device.csv', icon: '💻', desc: 'Device usage logs' },
@@ -114,6 +114,17 @@ export default function Upload() {
       message: 'Starting pipeline...',
     });
 
+    if (Object.keys(files).length > 0) {
+      setProgress((prev) => ({ ...prev, message: 'Uploading files...' }));
+      try {
+        await uploadFiles(files);
+      } catch (e) {
+        setError('Upload failed: ' + (e.response?.data?.error || e.message));
+        setRunning(false);
+        return;
+      }
+    }
+
     startPolling();
 
     try {
@@ -128,12 +139,13 @@ export default function Upload() {
         message: 'Done!',
       });
 
-      sessionStorage.setItem(
-        'insiderResults',
-        JSON.stringify(data)
-      );
+      try {
+        sessionStorage.setItem('insiderResults', JSON.stringify(data));
+      } catch (err) {
+        console.warn('sessionStorage quota exceeded, bypassing storage...');
+      }
 
-      setTimeout(() => navigate('/results'), 600);
+      setTimeout(() => navigate('/results', { state: { insiderResults: data } }), 600);
 
     } catch (e) {
 

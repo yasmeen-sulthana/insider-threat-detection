@@ -54,15 +54,15 @@ def _extract_user_date(df: pd.DataFrame) -> pd.DataFrame:
     # --- Date column ---
     date_col = _find_col(df, ["date", "datetime", "timestamp", "time", "Date", "login_time", "logon_time"])
     if date_col:
-        df["date"] = pd.to_datetime(df[date_col], errors="coerce", infer_datetime_format=True)
+        df["date"] = pd.to_datetime(df[date_col], errors="coerce")
     else:
         # Try all columns for date-like content
         for col in df.columns:
             sample = df[col].dropna().astype(str).head(20)
             try:
-                parsed = pd.to_datetime(sample, errors="coerce", infer_datetime_format=True)
+                parsed = pd.to_datetime(sample, errors="coerce")
                 if parsed.notna().sum() > 10:
-                    df["date"] = pd.to_datetime(df[col], errors="coerce", infer_datetime_format=True)
+                    df["date"] = pd.to_datetime(df[col], errors="coerce")
                     logger.info(f"Auto-detected date column: '{col}'")
                     break
             except Exception:
