@@ -180,7 +180,7 @@ async def run_model():
             user_labels,
         )
 
-        result_df, model_accuracy = classify_users(meta_df)
+        result_df, accuracies, best_model = classify_users(meta_df)
 
         # =========================================
         # STEP 6 — BUILD RESPONSE
@@ -195,7 +195,8 @@ async def run_model():
 
         summary = build_summary(
             result_df,
-            model_accuracy,
+            accuracies,
+            best_model,
         )
 
         # =========================================

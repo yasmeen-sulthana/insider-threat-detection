@@ -108,6 +108,17 @@ export default function Results() {
   }, [data]);
 
   // =====================================
+  // COMPARISON CHART DATA
+  // =====================================
+  const comparisonData = useMemo(() => {
+    if (!data || !data.model_accuracies) return [];
+    return Object.entries(data.model_accuracies).map(([name, acc]) => ({
+      name,
+      accuracy: Number((acc * 100).toFixed(1))
+    })).sort((a, b) => b.accuracy - a.accuracy);
+  }, [data]);
+
+  // =====================================
   // FILTER + SEARCH + SORT
   // =====================================
   const filteredRows = useMemo(() => {
@@ -355,7 +366,7 @@ export default function Results() {
           <span className="stat-icon">🎯</span>
 
           <div className="stat-label">
-            Model Accuracy
+            {data.best_model ? `${data.best_model} Accuracy` : 'Model Accuracy'}
           </div>
 
           <div className="stat-value">
@@ -457,6 +468,25 @@ export default function Results() {
                   activeDot={{ r: 6 }}
                 />
               </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+
+        {comparisonData.length > 0 && (
+          <div className="chart-card chart-full">
+            <h3>Meta Classifiers Accuracy Comparison</h3>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={comparisonData} layout="vertical" margin={{ left: 50, right: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                <XAxis type="number" domain={[0, 100]} />
+                <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 12 }} />
+                <Tooltip formatter={(val) => `${val}%`} />
+                <Bar dataKey="accuracy" fill="var(--primary)" barSize={24} radius={[0, 4, 4, 0]}>
+                  {comparisonData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={index === 0 ? 'var(--success)' : 'var(--primary)'} />
+                  ))}
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           </div>
         )}
