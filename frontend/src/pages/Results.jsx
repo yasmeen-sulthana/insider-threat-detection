@@ -366,7 +366,7 @@ export default function Results() {
           <span className="stat-icon">🎯</span>
 
           <div className="stat-label">
-            {data.best_model ? `${data.best_model} Accuracy` : 'Model Accuracy'}
+            {data.best_model ? `Random Forest Accuracy` : 'Model Accuracy'}
           </div>
 
           <div className="stat-value">
